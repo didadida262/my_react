@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My_vue</title>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    // 1.React官方使用
+    // const content = React.createElement(
+    //     'div',
+    //     {
+    //     title: 'title',
+    //     id: 'id',
+    //     },
+    //     '川崎重工'
+    // )
+    // console.log('content>>>', content)
+    // const root = ReactDOM.createRoot(
+    //     document.getElementById('root')
+    // );
+    // root.render(content)
+
+    // 2. diy版本
+    const createTextNode = (child) => {
+        return {
+            type: 'text',
+            props: {
+            nodeValue: child,
+            children: []
+            
+            }
+        }
+    }
+    const myCreateElement = (type, props, ...children) => {
+        console.log('children>>>', children)
+        return {
+            type: type,
+            props: {
+            ...props,
+            children: children.map((child) => typeof child === 'object'? child: createTextNode(child))
+            },
+        }
+    }
+    const VNode = myCreateElement(
+        'div',
+        {
+            title: 'title',
+            id: 'id'
+        },
+        '一段文本....川崎重工'
+    )
+    console.log('VNode>>>>',VNode)
+    const myRender = (element, container) => {
+        const dom = element.type === 'text'? document.createTextNode(element.props.nodeValue): document.createElement(element.type)
+        Object.keys(element.props).filter((item) => item !== 'children').forEach((item) => dom[item] = element.props[item])
+        element?.props?.children?.forEach((child) => myRender(child, dom))
+        container.appendChild(dom)
+    }
+    const container = document.getElementById('app')
+    myRender(VNode,container )
+</script>
+</html>
