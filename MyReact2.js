@@ -25,8 +25,6 @@ const createDom = (fiber) => {
 const performUniteOfWork = (fiber) => {
   if (!fiber.dom) {
     fiber.dom = createDom(fiber)
-    console.log('fiber>>>',fiber)
-    console.log('fiber.dom>>>',fiber.dom)
   }
   if (fiber.parent) {
     fiber.parent.dom.appendChild(fiber.dom)
@@ -73,7 +71,6 @@ const myRender = (element, container) => {
   
 const workLoop = (deadline) => {
   let shouldYield = true
-  console.warn('workLoop>>>loop')
   while (nextUniteWork && shouldYield) {
     console.log('执行>>>任务')
     nextUniteWork = performUniteOfWork(nextUniteWork)
